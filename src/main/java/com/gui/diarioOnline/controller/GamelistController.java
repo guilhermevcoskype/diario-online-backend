@@ -34,7 +34,7 @@ public class GamelistController {
         List<Media> listMedia = new ArrayList<>();
         list.forEach(dataildGame -> {
             Game game = new Game();
-            game.setId(dataildGame.id());
+            game.setGameId(dataildGame.id());
             game.setName(dataildGame.name());
             game.setSummary(dataildGame.summary());
             game.setCover(dataildGame.coverUrl());

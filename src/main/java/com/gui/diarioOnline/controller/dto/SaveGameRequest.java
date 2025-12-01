@@ -13,7 +13,7 @@ public record SaveGameRequest(
 ) {
     public Game toModel() {
         return Game.builder()
-                .id(id)
+                .gameId(id)
                 .name(name)
                 .summary(summary)
                 .cover(cover)

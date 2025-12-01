@@ -5,6 +5,8 @@ import com.gui.diarioOnline.infra.entity.User;
 import com.gui.diarioOnline.infra.exception.MediaAlreadyExistsException;
 import com.gui.diarioOnline.infra.exception.UserNotFoundException;
 import com.gui.diarioOnline.infra.model.Game;
+import com.gui.diarioOnline.infra.model.Media;
+import com.gui.diarioOnline.infra.repository.MediaRepository;
 import com.gui.diarioOnline.infra.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,22 +20,27 @@ public class GameService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private MediaRepository mediaRepository;
+
     @Transactional
     public void saveGameUser(SaveGameRequest saveGameRequest){
         User user = userRepository.findByEmail(saveGameRequest.email()).orElseThrow(UserNotFoundException::new);
         if (user.getMedia() == null) {
             user.setMedia(new ArrayList<>());
-        }else{
-            // VERIFICAÇÃO DE UNICIDADE MANUAL AQUI:
-            boolean alreadyExists = user.getMedia().stream()
-                    .anyMatch(mediaItem -> mediaItem instanceof Game && ((Game) mediaItem).equals(saveGameRequest.toModel()));
-
-            if (alreadyExists) {
-                throw new MediaAlreadyExistsException("O jogo com ID " + saveGameRequest.toModel().getId() + " já foi adicionado a este usuário.");
-            }
-
-            user.getMedia().add(saveGameRequest.toModel());
-            userRepository.save(user);
         }
+
+        boolean alreadyExists = user.getMedia().stream()
+                .anyMatch(mediaItem -> mediaItem instanceof Game && ((Game) mediaItem).getGameId().equals(saveGameRequest.toModel().getGameId()));
+
+        if (alreadyExists) {
+            throw new MediaAlreadyExistsException("O jogo com ID " + saveGameRequest.toModel().getGameId() + " já foi adicionado a este usuário.");
+        }
+
+        Media savedMedia = mediaRepository.save(saveGameRequest.toModel());
+        user.getMedia().add(savedMedia);
+
+        userRepository.save(user);
+
     }
 }

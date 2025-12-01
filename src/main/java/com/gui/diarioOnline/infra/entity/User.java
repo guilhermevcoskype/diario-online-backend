@@ -6,6 +6,7 @@ import com.gui.diarioOnline.infra.model.Role;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,6 +35,7 @@ public class User implements UserDetails {
     @Indexed(unique = true)
     private String email;
 
+    @DBRef
     private List<Media> media;
 
     private List<Role> roles;

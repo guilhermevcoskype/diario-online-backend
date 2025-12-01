@@ -2,6 +2,7 @@ package com.gui.diarioOnline.infra.model;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 @Getter
 @Setter
@@ -13,12 +14,13 @@ import lombok.experimental.SuperBuilder;
 public class Game extends Media {
 
 
-    private Long id;
+    @Indexed(unique = true)
+    private Long gameId;
 
     @Override
     public String getType(){
         return "GAME";
-    };
+    }
 
 
 }
