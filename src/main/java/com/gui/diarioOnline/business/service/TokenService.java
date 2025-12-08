@@ -1,4 +1,4 @@
-package com.gui.diarioOnline.business;
+package com.gui.diarioOnline.business.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -21,7 +21,7 @@ public class TokenService {
     @Value("${api.security.token.issuer}")
     private String issuer;
 
-    public String createToken(User user) {
+    public String generateToken(User user) {
         try {
             var algorithm = Algorithm.HMAC256(secret);
             return JWT.create()

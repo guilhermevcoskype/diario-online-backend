@@ -1,8 +1,8 @@
 package com.gui.diarioOnline.controller;
 
-import com.gui.diarioOnline.business.GameService;
-import com.gui.diarioOnline.business.IGDBService;
-import com.gui.diarioOnline.business.UserService;
+import com.gui.diarioOnline.business.service.GameService;
+import com.gui.diarioOnline.business.service.IGDBService;
+import com.gui.diarioOnline.business.service.UserService;
 import com.gui.diarioOnline.controller.dto.DetailedGameResponse;
 import com.gui.diarioOnline.controller.dto.SaveGameRequest;
 import com.gui.diarioOnline.infra.model.Game;

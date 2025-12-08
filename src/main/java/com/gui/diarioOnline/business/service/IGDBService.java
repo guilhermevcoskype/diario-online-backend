@@ -1,4 +1,4 @@
-package com.gui.diarioOnline.business;
+package com.gui.diarioOnline.business.service;
 
 import com.gui.diarioOnline.controller.dto.CoverResponse;
 import com.gui.diarioOnline.controller.dto.DetailedGameResponse;

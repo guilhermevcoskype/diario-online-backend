@@ -1,6 +1,6 @@
 package com.gui.diarioOnline.controller;
 
-import com.gui.diarioOnline.business.UserService;
+import com.gui.diarioOnline.business.service.UserService;
 import com.gui.diarioOnline.controller.dto.UserRequest;
 import com.gui.diarioOnline.controller.dto.UserResponse;
 import jakarta.validation.Valid;
