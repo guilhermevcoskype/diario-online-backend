@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/gamelist")
+@CrossOrigin
 public class GamelistController {
 
     @Autowired
@@ -37,7 +38,7 @@ public class GamelistController {
             game.setGameId(dataildGame.id());
             game.setName(dataildGame.name());
             game.setSummary(dataildGame.summary());
-            game.setCover(dataildGame.coverUrl());
+            game.setCover(dataildGame.coverUrl().replace("t_thumb", "t_cover_big"));
             listMedia.add(game);
         });
 

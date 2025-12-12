@@ -5,6 +5,7 @@ import com.gui.diarioOnline.infra.model.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public record UserRequest (
@@ -17,6 +18,7 @@ public record UserRequest (
                 .email(email)
                 .password(password)
                 .roles(List.of(Role.USER))
+                .media(new ArrayList<>())
                 .build();
     }
 }

@@ -1,8 +1,7 @@
 package com.gui.diarioOnline.controller;
 
 import com.gui.diarioOnline.business.service.UserService;
-import com.gui.diarioOnline.controller.dto.UserRequest;
-import com.gui.diarioOnline.controller.dto.UserResponse;
+import com.gui.diarioOnline.controller.dto.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -39,6 +38,18 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse createUser(@RequestBody @Valid UserRequest userRequest) {
         return userService.createUser(userRequest);
+    }
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponse updateMediaUser(@RequestBody @Valid UserMediaUpdateRequest userMediaUpdateRequest) {
+        return userService.updateMediaUser(userMediaUpdateRequest);
+    }
+
+    @PostMapping("/userMedia")
+    @ResponseStatus(HttpStatus.OK)
+    public List<MediaListUpdateResponse> getMediaUser(@RequestParam String emailRequest) {
+        return userService.getMediaUser(emailRequest);
     }
 
 }
