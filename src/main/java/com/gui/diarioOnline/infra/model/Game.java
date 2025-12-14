@@ -1,8 +1,9 @@
 package com.gui.diarioOnline.infra.model;
 
+import com.gui.diarioOnline.infra.entity.Media;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.annotation.Id;
 
 @Getter
 @Setter
@@ -14,8 +15,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 public class Game extends Media {
 
 
-    @Indexed(unique = true)
-    private Long gameId;
+    @Id
+    private String gameId;
 
     @Override
     public String getType(){

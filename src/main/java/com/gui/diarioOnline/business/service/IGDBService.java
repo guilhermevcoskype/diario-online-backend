@@ -1,8 +1,8 @@
 package com.gui.diarioOnline.business.service;
 
-import com.gui.diarioOnline.controller.dto.CoverResponse;
-import com.gui.diarioOnline.controller.dto.DetailedGameResponse;
-import com.gui.diarioOnline.controller.dto.GameResponse;
+import com.gui.diarioOnline.controller.dto.CoverResponseDTO;
+import com.gui.diarioOnline.controller.dto.DetailedGameResponseDTO;
+import com.gui.diarioOnline.controller.dto.GameResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -18,46 +18,46 @@ public class IGDBService {
         this.webClient = webClient;
     }
 
-    public List<DetailedGameResponse> consumeGamesList(String game) {
+    public List<DetailedGameResponseDTO> consumeGamesList(String game) {
         String queryGameList = "search \""+game+"\"; fields name, summary, cover;";
         return webClient.post()
                 .uri("/games")
                 .bodyValue(queryGameList)
                 .retrieve()
-                .bodyToFlux(GameResponse.class)
-                .flatMap(gameResponse -> {
+                .bodyToFlux(GameResponseDTO.class)
+                .flatMap(gameResponseDTO -> {
 
-                    if (gameResponse.cover() == null) {
-                        return Mono.just(new DetailedGameResponse(
-                                gameResponse.id(),
-                                gameResponse.name(),
-                                gameResponse.summary(),
+                    if (gameResponseDTO.cover() == null) {
+                        return Mono.just(new DetailedGameResponseDTO(
+                                gameResponseDTO.id(),
+                                gameResponseDTO.name(),
+                                gameResponseDTO.summary(),
                                 null,
                                 "N/A"
                         ));
                     }
 
-                    Mono<CoverResponse> coverMono = consumeCoverGame(gameResponse);
+                    Mono<CoverResponseDTO> coverMono = consumeCoverGame(gameResponseDTO);
 
                     return coverMono.map(cover ->
-                            new DetailedGameResponse(
-                                    gameResponse.id(),
-                                    gameResponse.name(),
-                                    gameResponse.summary(),
-                                    gameResponse.cover(),
+                            new DetailedGameResponseDTO(
+                                    gameResponseDTO.id(),
+                                    gameResponseDTO.name(),
+                                    gameResponseDTO.summary(),
+                                    gameResponseDTO.cover(),
                                     cover.url()
                             )
                     );
                 }).collectList().block();
     }
 
-    public Mono<CoverResponse> consumeCoverGame(GameResponse game) {
+    public Mono<CoverResponseDTO> consumeCoverGame(GameResponseDTO game) {
         String queryCoverUrl = "fields url; where id = "+game.cover()+";";
         return webClient.post()
                 .uri("/covers")
                 .bodyValue(queryCoverUrl)
                 .retrieve()
-                .bodyToFlux(CoverResponse.class).next();
+                .bodyToFlux(CoverResponseDTO.class).next();
     }
 
 }

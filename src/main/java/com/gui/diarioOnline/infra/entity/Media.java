@@ -1,4 +1,4 @@
-package com.gui.diarioOnline.infra.model;
+package com.gui.diarioOnline.infra.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -18,8 +18,6 @@ public abstract class Media {
     private String name;
     private String summary;
     private String cover;
-    private Double rating;
-    private String comments;
 
     public abstract String getType();
 }

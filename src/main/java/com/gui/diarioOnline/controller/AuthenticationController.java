@@ -1,10 +1,11 @@
 package com.gui.diarioOnline.controller;
 
 
+import com.gui.diarioOnline.business.service.ReviewService;
 import com.gui.diarioOnline.business.service.TokenService;
-import com.gui.diarioOnline.controller.dto.UserRequestLogin;
-import com.gui.diarioOnline.controller.dto.UserResponse;
-import com.gui.diarioOnline.controller.dto.UserResponseLogin;
+import com.gui.diarioOnline.controller.dto.UserRequestLoginDTO;
+import com.gui.diarioOnline.controller.dto.UserResponseDTO;
+import com.gui.diarioOnline.controller.dto.UserResponseLoginDTO;
 import com.gui.diarioOnline.infra.entity.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,14 @@ public class AuthenticationController {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private ReviewService reviewService;
+
     @PostMapping
-    public ResponseEntity<UserResponseLogin> efetuarLogin(@RequestBody @Valid UserRequestLogin userRequestLogin) {
+    public ResponseEntity<UserResponseLoginDTO> efetuarLogin(@RequestBody @Valid UserRequestLoginDTO userRequestLoginDTO) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userRequestLogin.email(), userRequestLogin.password());
+                new UsernamePasswordAuthenticationToken(userRequestLoginDTO.email(), userRequestLoginDTO.password());
 
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
@@ -37,11 +41,12 @@ public class AuthenticationController {
 
         String token = tokenService.generateToken(user);
 
-        return ResponseEntity.ok(new UserResponseLogin(
-                new UserResponse(
+
+        return ResponseEntity.ok(new UserResponseLoginDTO(
+                new UserResponseDTO(
                         user.getName(),
                         user.getEmail(),
-                        user.getMedia(),
+                        reviewService.getMediaFromUser(user.getEmail()),
                         user.getRoles()
                 ),
                 token

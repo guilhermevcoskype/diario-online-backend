@@ -1,6 +1,6 @@
 package com.gui.diarioOnline.controller.dto;
 
-public record CoverResponse(
+public record CoverResponseDTO(
         Long id,
         String url
 ) {}

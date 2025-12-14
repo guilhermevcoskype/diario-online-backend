@@ -1,6 +1,6 @@
 package com.gui.diarioOnline.controller.dto;
 
-public record MediaListUpdateRequest(
+public record MediaListUpdateRequestDTO(
         String gameId,
         String name,
         String summary,

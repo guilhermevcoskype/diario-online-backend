@@ -1,14 +1,12 @@
 package com.gui.diarioOnline.controller;
 
-import com.gui.diarioOnline.business.service.GameService;
+//import com.gui.diarioOnline.business.service.GameService;
 import com.gui.diarioOnline.business.service.IGDBService;
 import com.gui.diarioOnline.business.service.UserService;
-import com.gui.diarioOnline.controller.dto.DetailedGameResponse;
-import com.gui.diarioOnline.controller.dto.SaveGameRequest;
+import com.gui.diarioOnline.controller.dto.DetailedGameResponseDTO;
 import com.gui.diarioOnline.infra.model.Game;
-import com.gui.diarioOnline.infra.model.Media;
+import com.gui.diarioOnline.infra.entity.Media;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,18 +22,15 @@ public class GamelistController {
     private IGDBService igbdService;
 
     @Autowired
-    private GameService gameService;
-
-    @Autowired
     private UserService userService;
 
     @PostMapping("/games")
     public ResponseEntity<List<Media>> gamesList(@RequestBody String gameName) {
-        List<DetailedGameResponse> list = igbdService.consumeGamesList(gameName);
+        List<DetailedGameResponseDTO> list = igbdService.consumeGamesList(gameName);
         List<Media> listMedia = new ArrayList<>();
         list.forEach(dataildGame -> {
             Game game = new Game();
-            game.setGameId(dataildGame.id());
+            game.setGameId(dataildGame.id().toString());
             game.setName(dataildGame.name());
             game.setSummary(dataildGame.summary());
             game.setCover(dataildGame.coverUrl().replace("t_thumb", "t_cover_big"));
@@ -43,12 +38,5 @@ public class GamelistController {
         });
 
         return ResponseEntity.ok(listMedia);
-    }
-
-    @PostMapping("/savegame")
-    @ResponseStatus(HttpStatus.OK)
-
-    public void savegame(@RequestBody SaveGameRequest saveGameRequest) {
-        gameService.saveGameUser(saveGameRequest);
     }
 }

@@ -33,6 +33,26 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(MediaWithUserNoException.class)
+    public ResponseEntity<Object> mediaWithUserNoException(MediaWithUserNoException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpStatus.NO_CONTENT.value());
+        body.put("error", "No Content");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NO_CONTENT);
+    }
+
+    @ExceptionHandler(UserWithNoMediaException.class)
+    public ResponseEntity<Object> userWithNoMediaException(UserWithNoMediaException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpStatus.NO_CONTENT.value());
+        body.put("error", "No Content");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NO_CONTENT);
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Object> AuthenticationException(AuthenticationException ex) {
         Map<String, Object> body = new HashMap<>();

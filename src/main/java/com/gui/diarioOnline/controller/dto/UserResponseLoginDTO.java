@@ -1,8 +1,8 @@
 package com.gui.diarioOnline.controller.dto;
 
-public record UserResponseLogin(
+public record UserResponseLoginDTO(
 
-        UserResponse userResponse,
+        UserResponseDTO userResponseDTO,
 
         String accessToken
 ) {

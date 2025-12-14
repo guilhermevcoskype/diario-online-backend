@@ -1,6 +1,6 @@
 package com.gui.diarioOnline.controller.dto;
 
-public record MediaListUpdateResponse(
+public record MediaListUpdateResponseDTO(
         String name,
         String summary,
         String cover,
