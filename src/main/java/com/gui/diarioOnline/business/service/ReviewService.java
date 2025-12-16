@@ -1,5 +1,6 @@
 package com.gui.diarioOnline.business.service;
 
+import com.gui.diarioOnline.controller.dto.DeleteMediaRequestDTO;
 import com.gui.diarioOnline.controller.dto.MediaRequestDTO;
 import com.gui.diarioOnline.controller.dto.SaveMediaRequestDTO;
 import com.gui.diarioOnline.controller.dto.UserMediaUpdateRequestDTO;
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -43,8 +43,19 @@ public class ReviewService {
 
     }
 
+    public List<Review> getReviewFromUser(String email) {
+        String userId = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new)
+                .getId();
+
+        Optional<List<Review>> optionalReview = reviewRepository.findByUserId(userId);
+
+        return optionalReview.orElseThrow(ReviewNotFoundException::new);
+
+    }
+
     public Review saveReview(Media media, User user, String comments, Double ratings) {
-        Optional<Review> reviewListOptional = reviewRepository.findByUserIdAndMediaId(user.getId(), ((Game) media).getGameId());
+        Optional<Review> reviewListOptional = reviewRepository.findByUserIdAndMediaId(user.getId(), media.getId());
 
         if (reviewListOptional.isPresent()) {
             throw new ReviewAlreadyExistsException();
@@ -60,11 +71,10 @@ public class ReviewService {
 
         Optional<List<Review>> optionalReviews = reviewRepository.findByUserId(userId);
 
-        return optionalReviews
-                .orElse(Collections.emptyList())
+        return optionalReviews.orElse(Collections.emptyList())
                 .stream()
                 .map(Review::getMedia)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
@@ -80,22 +90,50 @@ public class ReviewService {
     @Transactional
     public Review saveMediaOnUser(SaveMediaRequestDTO saveMediaRequestDTO) {
         User user = userRepository.findByEmail(saveMediaRequestDTO.email()).orElseThrow(UserNotFoundException::new);
-        Optional<Media> mediaOptional = mediaRepository.findById(saveMediaRequestDTO.mediaRequestDTO().gameId());
-        Media media;
-        media = mediaOptional.orElseGet(() -> mediaRepository.save(createMediaFromDTO(saveMediaRequestDTO.mediaRequestDTO())));
-        return this.saveReview(media, user, saveMediaRequestDTO.comments(), saveMediaRequestDTO.rating());
+        Optional<Game> gameOptional = mediaRepository.findByBusinessId(saveMediaRequestDTO.mediaRequestDTO().gameId());
+        Game game;
+        game = gameOptional.orElseGet(() -> mediaRepository.save(((Game)createMediaFromDTO(saveMediaRequestDTO.mediaRequestDTO()))));
+        return this.saveReview(game, user, saveMediaRequestDTO.comments(), saveMediaRequestDTO.rating());
 
+    }
+
+    @Transactional
+    public void deleteGameFromUser(DeleteMediaRequestDTO deleteMediaRequestDTO) {
+        User user = userRepository.findByEmail(deleteMediaRequestDTO.email()).orElseThrow(UserNotFoundException::new);
+        Media media = mediaRepository.findByBusinessId(deleteMediaRequestDTO.gameId()).orElseThrow(MediaNotFoundException::new);
+        Review review = this.getReviewFromUserAndMedia(user.getEmail(), media.getId());
+        reviewRepository.delete(review);
+        this.deleteMediaWithNoPreview(media);
+    }
+
+    @Transactional
+    public void deleteMediaFromUser(String email, String id) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Media media = mediaRepository.findById(id).orElseThrow(MediaNotFoundException::new);
+        Review review = this.getReviewFromUserAndMedia(user.getEmail(), media.getId());
+        reviewRepository.delete(review);
+        this.deleteMediaWithNoPreview(media);
     }
 
     private Media createMediaFromDTO(MediaRequestDTO mediaRequestDTO) {
         if ("GAME".equalsIgnoreCase(mediaRequestDTO.type())) {
             return Game.builder()
-                    .gameId(mediaRequestDTO.gameId())
+                    .businessId(mediaRequestDTO.gameId())
                     .name(mediaRequestDTO.name())
                     .summary(mediaRequestDTO.summary())
                     .cover(mediaRequestDTO.cover())
                     .build();
         }
         throw new IllegalArgumentException("Tipo de mídia desconhecido: " + mediaRequestDTO.type());
+    }
+
+    private void deleteMediaWithNoPreview(Media media) {
+        Optional<List<Review>> reviewsFromMedia = reviewRepository.findByMediaId(media.getId());
+        if (reviewsFromMedia.isPresent()){
+             List<Review> lista = reviewsFromMedia.get();
+             if(lista.isEmpty()){
+                 mediaRepository.deleteById(media.getId());
+             }
+        }
     }
 }

@@ -39,11 +39,16 @@ public class UserController {
                 .toList() : new ArrayList<>();
     }
 
-    //    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable("id") @NotNull @Email String email) {
         userService.deleteUser(email);
+    }
+
+    @DeleteMapping("/deleteMediaFromUser")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMediaFromUser(@RequestBody @Valid DeleteMediaRequestDTO deleteMediaRequestDTO) {
+        reviewService.deleteGameFromUser(deleteMediaRequestDTO);
     }
 
     @PostMapping
@@ -60,8 +65,8 @@ public class UserController {
 
     @PostMapping("/saveMediaOnUser")
     @ResponseStatus(HttpStatus.OK)
-    public Review saveMediaOnUser(@RequestBody @Valid SaveMediaRequestDTO saveMediaRequestDTO) {
-        return reviewService.saveMediaOnUser(saveMediaRequestDTO);
+    public UserResponseDTO saveMediaOnUser(@RequestBody @Valid SaveMediaRequestDTO saveMediaRequestDTO) {
+        return mapper.userToResponse(reviewService.saveMediaOnUser(saveMediaRequestDTO).getUser());
     }
 
     @PostMapping("/mediaFromUser")

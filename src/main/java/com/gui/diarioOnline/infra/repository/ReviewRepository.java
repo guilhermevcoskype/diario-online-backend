@@ -14,6 +14,10 @@ public interface ReviewRepository extends MongoRepository<Review, String> {
 
     void deleteByUserId(String id);
 
+    void deleteAllByUserId(String id);
+
+    void deleteByUserIdAndMediaId(String userId, String mediaId);
+
     // Método para encontrar uma review específica entre um user e uma media
     Optional<Review> findByUserIdAndMediaId(String id, String mediaId);
 }

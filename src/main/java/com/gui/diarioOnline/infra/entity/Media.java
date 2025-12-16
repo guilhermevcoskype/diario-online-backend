@@ -2,6 +2,7 @@ package com.gui.diarioOnline.infra.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "media")
@@ -14,6 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 public abstract class Media {
 
+    @Id
     private String id;
     private String name;
     private String summary;

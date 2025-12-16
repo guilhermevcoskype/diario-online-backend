@@ -2,7 +2,7 @@ package com.gui.diarioOnline.business.service;
 
 import com.gui.diarioOnline.controller.dto.CoverResponseDTO;
 import com.gui.diarioOnline.controller.dto.DetailedGameResponseDTO;
-import com.gui.diarioOnline.controller.dto.GameResponseDTO;
+import com.gui.diarioOnline.controller.dto.GameWebClientResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -24,34 +24,34 @@ public class IGDBService {
                 .uri("/games")
                 .bodyValue(queryGameList)
                 .retrieve()
-                .bodyToFlux(GameResponseDTO.class)
-                .flatMap(gameResponseDTO -> {
+                .bodyToFlux(GameWebClientResponseDTO.class)
+                .flatMap(gameWebClientResponseDTO -> {
 
-                    if (gameResponseDTO.cover() == null) {
+                    if (gameWebClientResponseDTO.cover() == null) {
                         return Mono.just(new DetailedGameResponseDTO(
-                                gameResponseDTO.id(),
-                                gameResponseDTO.name(),
-                                gameResponseDTO.summary(),
+                                gameWebClientResponseDTO.id(),
+                                gameWebClientResponseDTO.name(),
+                                gameWebClientResponseDTO.summary(),
                                 null,
                                 "N/A"
                         ));
                     }
 
-                    Mono<CoverResponseDTO> coverMono = consumeCoverGame(gameResponseDTO);
+                    Mono<CoverResponseDTO> coverMono = consumeCoverGame(gameWebClientResponseDTO);
 
                     return coverMono.map(cover ->
                             new DetailedGameResponseDTO(
-                                    gameResponseDTO.id(),
-                                    gameResponseDTO.name(),
-                                    gameResponseDTO.summary(),
-                                    gameResponseDTO.cover(),
+                                    gameWebClientResponseDTO.id(),
+                                    gameWebClientResponseDTO.name(),
+                                    gameWebClientResponseDTO.summary(),
+                                    gameWebClientResponseDTO.cover(),
                                     cover.url()
                             )
                     );
                 }).collectList().block();
     }
 
-    public Mono<CoverResponseDTO> consumeCoverGame(GameResponseDTO game) {
+    public Mono<CoverResponseDTO> consumeCoverGame(GameWebClientResponseDTO game) {
         String queryCoverUrl = "fields url; where id = "+game.cover()+";";
         return webClient.post()
                 .uri("/covers")

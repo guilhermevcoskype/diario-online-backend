@@ -1,6 +1,7 @@
 package com.gui.diarioOnline.business.service;
 
 import com.gui.diarioOnline.controller.dto.UserRequestDTO;
+import com.gui.diarioOnline.infra.entity.Media;
 import com.gui.diarioOnline.infra.entity.User;
 import com.gui.diarioOnline.infra.exception.EmailAlreadyUsedException;
 import com.gui.diarioOnline.infra.exception.UserNotFoundException;
@@ -30,6 +31,9 @@ public class UserService {
     @Autowired
     private ReviewRepository reviewRepository;
 
+    @Autowired
+    private ReviewService reviewService;
+
     public List<User> getUsers() {
         return userRepository.findAll();
     }
@@ -38,9 +42,10 @@ public class UserService {
     public void deleteUser(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
-        String userId = user.getId();
-
-        reviewRepository.deleteByUserId(userId);
+        List<Media> listaMedia = reviewService.getMediaFromUser(email);
+        listaMedia.forEach(media -> {
+            reviewService.deleteMediaFromUser(email, media.getId());
+        });
 
         userRepository.deleteByEmail(email);
     }
