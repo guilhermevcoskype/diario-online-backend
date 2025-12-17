@@ -30,7 +30,6 @@ public class UserController {
     @Autowired
     private Mapper mapper;
 
-    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<UserResponseDTO> getUsers() {

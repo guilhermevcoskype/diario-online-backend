@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 @Service
 public class TokenService {
@@ -26,17 +24,19 @@ public class TokenService {
             var algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer(issuer)
-                    .withSubject(user.getId())
+                    .withSubject(user.getEmail())
+                    .withIssuedAt(Instant.now())
+                    .withExpiresAt(expirationDate())
                     .withArrayClaim("roles", user.getRoles()
                             .stream()
                             .map(Enum::name)
                             .toArray(String[]::new))
-                    .withExpiresAt(expirationDate())
                     .sign(algorithm);
-        } catch (JWTCreationException exception){
+        } catch (JWTCreationException exception) {
             throw new RuntimeException("Erro ao gerar token jwt", exception);
         }
     }
+
 
     public String getSubject(String tokenJWT) {
         try {
@@ -53,7 +53,7 @@ public class TokenService {
 
 
     private Instant expirationDate() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        return Instant.now().plusSeconds(2 * 60 * 60);
     }
 
 }
