@@ -29,9 +29,18 @@ public class SecurityConfigurations {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
-                    req.anyRequest().permitAll();
+                    req.requestMatchers(HttpMethod.DELETE, "/user").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.DELETE, "/user/deleteMediaFromUser").hasRole("USER")
+                            .requestMatchers(HttpMethod.GET, "/user").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.PUT, "/user").hasRole("USER")
+                            .requestMatchers(HttpMethod.POST, "/user").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/user/**").hasRole("USER")
+                            .requestMatchers(HttpMethod.POST, "/gamelist/**").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/home").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                            .anyRequest().authenticated();
                 })
-                //.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

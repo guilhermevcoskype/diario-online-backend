@@ -1,6 +1,6 @@
 package com.gui.diarioOnline.controller.dto;
 
-public record DetailedGameResponse(
+public record DetailedGameResponseDTO(
         Long id,
         String name,
         String summary,

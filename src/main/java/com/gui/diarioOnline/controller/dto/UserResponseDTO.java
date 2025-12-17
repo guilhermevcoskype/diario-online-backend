@@ -1,17 +1,16 @@
 package com.gui.diarioOnline.controller.dto;
 
-import com.gui.diarioOnline.infra.model.Media;
 import com.gui.diarioOnline.infra.model.Role;
 
 import java.util.List;
 
-public record UserResponse(
+public record UserResponseDTO(
 
         String name,
 
         String email,
 
-        List<Media>media,
+        List<GameResponseDTO>media,
 
         List<Role> roles
 ) {

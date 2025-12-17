@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
-public record UserRequest (
+public record UserRequestDTO(
         @NotBlank String name,
         @Email @NotBlank String email,
         @NotBlank String password) {

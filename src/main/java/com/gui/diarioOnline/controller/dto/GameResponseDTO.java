@@ -3,10 +3,13 @@ package com.gui.diarioOnline.controller.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record GameResponse(
-        Long id,
+public record GameResponseDTO(
+        String id,
+        String gameId,
         String name,
         String summary,
-        Long cover
+        String cover,
+        Double rating,
+        String comments
 ) {}
 

@@ -1,6 +1,7 @@
 package com.gui.diarioOnline.infra;
 
-import com.gui.diarioOnline.business.TokenService;
+import com.gui.diarioOnline.business.service.TokenService;
+import com.gui.diarioOnline.infra.exception.UserNotFoundException;
 import com.gui.diarioOnline.infra.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,7 +31,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if (tokenJWT != null) {
             var subject = tokenService.getSubject(tokenJWT);
-            UserDetails userDetails = repository.findByEmail(subject).orElse(null);;
+            UserDetails userDetails = repository.findByEmail(subject).orElseThrow(UserNotFoundException::new);
 
             var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

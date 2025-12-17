@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.CONFLICT)
-public class MediaAlreadyExistsException extends RuntimeException {
-    public MediaAlreadyExistsException() {
-        super("Midia já existente.");
+public class ReviewAlreadyExistsException extends RuntimeException {
+    public ReviewAlreadyExistsException() {
+        super("Review já existente.");
     }
 }
 
