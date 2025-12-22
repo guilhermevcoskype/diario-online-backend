@@ -24,7 +24,7 @@ O backend do Diário Online fornece uma API REST responsável por autenticação
 
 ## 🛠️ Tecnologias e Decisões Técnicas
 
-Java 17: LTS atual, garantindo performance e recursos modernos da linguagem
+Java 17: Linguagem robusta e com vasta compatibilidade com sistemas diversos
 
 Spring Boot 4: Framework principal da aplicação
 
@@ -109,24 +109,46 @@ mvn spring-boot:run
 
 ```
 diario-online-backend/
+├── .idea/                      # Configurações da IDE (IntelliJ)
+├── .mvn/                       # Wrapper do Maven
 ├── src/
 │   ├── main/
-│   │   ├── java/com/gui/
-│   │   │   ├── controller/     # Controllers REST
-│   │   │   ├── domain/         # Entidades e DTOs
-│   │   │   ├── repository/     # Repositórios MongoDB
-│   │   │   ├── service/        # Regras de negócio
-│   │   │   ├── security/       # Configuração de segurança
-│   │   │   └── config/         # Configurações gerais
+│   │   ├── java/
+│   │   │   └── com/gui/diarioOnline/
+│   │   │       ├── business/
+│   │   │       │   └── service/        # Regras de negócio
+│   │   │       │
+│   │   │       ├── controller/         # Controllers REST
+│   │   │       │   ├── dto/             # DTOs de entrada e saída
+│   │   │       │   ├── mapper/          # Mapeadores DTO ↔ Entity
+│   │   │       │   ├── AuthenticationController.java
+│   │   │       │   ├── GamelistController.java
+│   │   │       │   └── UserController.java
+│   │   │       │
+│   │   │       ├── infra/               # Camada de infraestrutura
+│   │   │       │   ├── entity/           # Entidades do MongoDB
+│   │   │       │   ├── exception/        # Tratamento de exceções
+│   │   │       │   ├── model/            # Modelos auxiliares
+│   │   │       │   ├── repository/       # Repositórios MongoDB
+│   │   │       │   ├── SecurityConfigurations.java
+│   │   │       │   ├── SecurityFilter.java
+│   │   │       │   └── WebClientConfig.java
+│   │   │       │
+│   │   │       └── DiarioOnlineApplication.java
+│   │   │
 │   │   └── resources/
+│   │       ├── static/                  # Arquivos estáticos
+│   │       ├── templates/               # Templates (caso use)
 │   │       ├── application.properties
+│   │       ├── application-dev.properties
 │   │       └── application-prod.properties
 │   │
-│   └── test/                   # Testes automatizados
+│   └── test/                            # Testes automatizados
 │
-├── dockerfile                  # Dockerfile da aplicação
-├── pom.xml                     # Dependências Maven
-└── README.md                   # Documentação
+├── target/                              # Build gerado pelo Maven
+├── pom.xml                              # Dependências e configurações Maven
+└── README.md                            # Documentação do projeto
+
 ```
 
 ---
