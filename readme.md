@@ -12,21 +12,7 @@ Esta é a API do projeto Diário Online, responsável por autenticação, persis
 
 ## 🏗️ O Projeto
 
-O backend do Diário Online fornece uma API REST responsável por:
-
-Autenticação e autorização de usuários
-
-Persistência de dados no MongoDB
-
-Gerenciamento de usuários e mídias salvas
-
-Integração com APIs externas de jogos (IGDB)
-
-Emissão e validação de tokens JWT
-
-Ele foi desenvolvido seguindo princípios de arquitetura em camadas, boas práticas REST e segurança.
-
----
+O backend do Diário Online fornece uma API REST responsável por autenticação e autorização de usuários, persistência de dados no MongoDB, gerenciamento de usuários e mídias salvas, integração com APIs externas,  de jogos (IGDB) e emissão e validação de tokens JWT. Ele foi desenvolvido seguindo princípios de arquitetura em camadas, boas práticas REST e segurança.
 
 ### 🔗 Repositórios Relacionados
 
